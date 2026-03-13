@@ -1,0 +1,42 @@
+author: Alice Jones <alice.jones@example.com>
+
+gtlint-directives-to-remove-on-build:
+  - gtlint.*
+  - gtformat.*
+
+input-variables:
+  - name:
+    default-value:
+    description:
+    is-required: false
+    should-clean-up: true
+    should-show-in-table: true
+    type:
+
+notes: >-
+  Here are some notes!
+
+other-variables-to-clean-up:
+  - foo
+  - bar
+  - baz
+
+other-variables-not-to-clean-up:
+  - hello
+  - world
+
+output-variables:
+  - name:
+    description:
+    should-show-in-table: true
+    type:
+
+services:
+  - name:
+    url:
+    headers:
+      - key:
+        value:
+
+title: My Cool Program
+url: https://www.guidedtrack.com/programs/00000/edit

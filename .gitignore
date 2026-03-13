@@ -1,0 +1,6 @@
+.~lock*
+node_modules
+temp
+temp.gt
+temp.json
+temp.mjs

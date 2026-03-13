@@ -1,0 +1,30 @@
+-- @gtlint-disable-next-line
+{{docs}}
+
+-- @from-parent: error_is_fatal
+
+-- @to-child: error_is_fatal
+-- @to-child: error_message
+-- @to-child: error_title
+
+>> error_title = "{{ title }}"
+
+*if: not error_is_fatal
+	>> error_is_fatal = "no"
+
+--------------------------------------------------------------------------------
+-- Do cool stuff
+--------------------------------------------------------------------------------
+
+Do cool stuff here.
+
+*goto: EndLabel
+
+--------------------------------------------------------------------------------
+-- Clean up
+--------------------------------------------------------------------------------
+
+*label: EndLabel
+
+-- @gtlint-disable-next-line
+{{cleanup}}
