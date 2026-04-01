@@ -7,6 +7,8 @@
 - generates code to clean up non-output variables
 - optionally removes [gtlint](https://github.com/jrc03c/gtlint) directives from generated files
 
+check out the [demo](./demo)!
+
 # installation
 
 ```bash
