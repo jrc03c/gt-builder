@@ -1,0 +1,57 @@
+author: Alice Jones <alice.jones@example.com>
+
+gtlint-directives-to-remove-on-build:
+  - gtlint.*
+  - gtformat.*
+
+input-variables:
+  - name: email_address
+    default-value:
+    description: the email address to be added to the mailing list
+    is-required: true
+    should-clean-up: true
+    should-show-in-table: true
+    type: string
+
+  - name: is_a_pro_subscriber
+    default-value: 0
+    description: whether or not the user is signing up for the "pro" tier
+    is-required: false
+    should-clean-up: true
+    should-show-in-table: true
+    type: binary (0 or 1)
+
+notes: >-
+  Here are some notes!
+
+# other-variables-to-clean-up:
+#   - foo
+#   - bar
+#   - baz
+
+# other-variables-not-to-clean-up:
+#   - hello
+#   - world
+
+output-variables:
+  - name: error
+    description: a response association; only defined if an error occurs during the service call
+    should-show-in-table: true
+    type: association
+
+  - name: was_subscribed_successfully
+    description: whether or not the user was successfully added to the mailing list
+    should-show-in-table: true
+    type: binary (0 or 1)
+
+services:
+  - name: Mailing List Service
+    url: https://example.com/api/v0
+    username: "[empty string]"
+    password: "[MAILING_LIST_SERVICE_API_KEY]"
+    headers:
+      - key: "some-key"
+        value: "<some-value>"
+
+title: My Cool Mailing List Sign-Up Program
+url: https://www.guidedtrack.com/programs/00000/edit

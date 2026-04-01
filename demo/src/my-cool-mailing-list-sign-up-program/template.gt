@@ -1,0 +1,67 @@
+-- @gtlint-disable-next-line
+{{docs}}
+
+-- @from-parent: email_address
+-- @from-parent: error_is_fatal
+-- @from-parent: is_a_pro_subscriber
+
+-- @to-child: error_is_fatal
+-- @to-child: error_message
+-- @to-child: error_title
+
+-- @to-parent: error
+-- @to-parent: was_subscribed_successfully
+
+>> error_title = "{{ title }}"
+
+*if: not error_is_fatal
+	>> error_is_fatal = "no"
+
+*if: not email_address
+	>> error_message = "You must define a variable called <code>email_address</code> that has a string value representing the email address to be added to the mailing list!"
+	*program: @jrc03c/show-error
+	*goto: EndLabel
+
+*if: not (email_address.type = "string")
+	>> error_message = "You must define a variable called <code>email_address</code> that has a string value representing the email address to be added to the mailing list!"
+	*program: @jrc03c/show-error
+	*goto: EndLabel
+
+*if: not is_a_pro_subscriber
+	>> is_a_pro_subscriber = 0
+
+*if: (not (is_a_pro_subscriber = 0)) and (not (is_a_pro_subscriber = 1))
+	>> error_message = "The variable <code>is_a_pro_subscriber</code> must have a value of 0 or 1!"
+	*program: @jrc03c/show-error
+	*goto: EndLabel
+
+--------------------------------------------------------------------------------
+-- Add email address to mailing list
+--------------------------------------------------------------------------------
+
+>> payload = {}
+>> payload["email"] = email_address
+>> payload["is_pro"] = "false".decode("JSON")
+
+*if: is_a_pro_subscriber = 1
+	>> payload["is_pro"] = "true".decode("JSON")
+
+>> was_subscribed_successfully = 0
+
+*service: Mailing List Service
+	*method: POST
+	*path: /subscribe
+	*send: payload
+	*success
+		>> was_subscribed_successfully = 1
+	*error
+		>> error = it
+
+--------------------------------------------------------------------------------
+-- Clean up
+--------------------------------------------------------------------------------
+
+*label: EndLabel
+
+-- @gtlint-disable-next-line
+{{cleanup}}
