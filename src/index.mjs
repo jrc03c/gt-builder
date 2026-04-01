@@ -24,6 +24,7 @@ class GTBuilder {
   build() {
     const { distDir, srcDir } = this
     const lq = new Liquid({ strictVariables: true })
+    const outfiles = []
 
     fs.rmSync(distDir, { force: true, recursive: true })
     fs.mkdirSync(distDir, { recursive: true })
@@ -79,13 +80,18 @@ class GTBuilder {
 
       out = out.trim()
 
-      const outfile = path.join(
-        distDir,
-        data[ProgramData.SYMBOL_FOR_DIR].split(path.sep).at(-1) + ".gt",
+      const outfile = path.resolve(
+        path.join(
+          distDir,
+          data[ProgramData.SYMBOL_FOR_DIR].split(path.sep).at(-1) + ".gt",
+        ),
       )
 
       fs.writeFileSync(outfile, out, "utf8")
+      outfiles.push(outfile)
     }
+
+    return outfiles
   }
 }
 
