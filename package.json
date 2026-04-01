@@ -31,5 +31,5 @@
     "pub": "npm version patch --force && npm publish --access=public"
   },
   "type": "module",
-  "version": "0.0.1"
+  "version": "0.0.2"
 }
