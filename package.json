@@ -22,6 +22,7 @@
   "name": "@jrc03c/gt-builder",
   "scripts": {
     "build": "node build.mjs",
+    "pub": "npm version patch --force && npm publish --access=public",
     "watch": "node build.mjs --watch"
   },
   "type": "module",
