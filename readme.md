@@ -18,7 +18,7 @@ npm install --save-dev @jrc03c/gt-builder
 ## command line
 
 ```
-Usage: gt-build [options] [paths...]
+Usage: npx gt-build [options] [paths...]
 
 Options:
   -d, --dist-dir <dir>
