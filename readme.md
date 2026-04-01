@@ -83,10 +83,6 @@ two special variables are created dynamically at build time and made available f
 
 it's common to place `{{ docs }}` at the very top of your `template.gt` file and `{{ cleanup }}` at the very bottom, though that's merely a convention, not a requirement. they're just standard variables that can be referenced via liquid syntax, and `template.gt` files are not required to reference them.
 
-# demo
-
-see the [`demo`](./demo) directory for a example.
-
 # roadmap
 
 features i'd like to add include:
