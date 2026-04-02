@@ -36,6 +36,11 @@ program
   .option("-w, --watch")
   .action((paths, options) => {
     const distDir = options.distDir ?? path.join(process.cwd(), "dist")
+    const excluded = options.exclude ?? []
+
+    for (let i = 0; i < excluded.length; i++) {
+      excluded[i] = path.resolve(excluded[i])
+    }
 
     if (paths.length === 0) {
       paths.push(process.cwd())
@@ -53,9 +58,9 @@ program
         for (let i = 0; i < paths.length; i++) {
           const p = paths[i]
 
-          const srcDir = fs.statSync(p).isDirectory()
-            ? p
-            : p.split(path.sep).slice(0, -1).join(path.sep)
+          const srcDir = path.resolve(
+            fs.statSync(p).isDirectory() ? p : path.dirname(p),
+          )
 
           const builder = new GTBuilder({
             distDir,
