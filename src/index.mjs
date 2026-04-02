@@ -7,11 +7,13 @@ import process from "node:process"
 
 class GTBuilder {
   distDir = path.join(process.cwd(), "dist")
+  exclude = [".git", "node_modules"]
   srcDir = path.join(process.cwd(), "src")
 
   constructor(data) {
     data = data ?? {}
     this.distDir = data.distDir ?? this.distDir
+    this.exclude = data.exclude ?? this.exclude
     this.srcDir = data.srcDir ?? this.srcDir
 
     if (this.distDir === this.srcDir) {
@@ -31,6 +33,26 @@ class GTBuilder {
 
     for (const file of fsx.getFilesDeepIter(srcDir)) {
       if (!file.match(/data\.ya?ml/)) {
+        continue
+      }
+
+      const dir = path.resolve(path.dirname(file))
+
+      const isExcluded = this.exclude.some(e => {
+        if (typeof e === "string") {
+          return file.includes(e) || dir.includes(e)
+        }
+
+        if (e instanceof RegExp) {
+          return file.match(e) || dir.match(e)
+        }
+
+        if (typeof e === "function") {
+          return e(file) || e(dir)
+        }
+      })
+
+      if (isExcluded) {
         continue
       }
 

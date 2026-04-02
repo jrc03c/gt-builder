@@ -32,14 +32,29 @@ program.command("init [dest]").action(dest => {
 program
   .command("build [paths...]")
   .option("-d, --dist-dir <dir>")
-  .option("-e, --exclude <paths...>")
+  .option("-e, --exclude <patterns...>")
   .option("-w, --watch")
   .action((paths, options) => {
     const distDir = options.distDir ?? path.join(process.cwd(), "dist")
-    const excluded = options.exclude ?? []
+    const exclude = options.exclude
 
-    for (let i = 0; i < excluded.length; i++) {
-      excluded[i] = path.resolve(excluded[i])
+    if (exclude) {
+      for (let i = 0; i < exclude.length; i++) {
+        const v = exclude[i]
+
+        if (v.match(/\/.*?\/[igmsuy]*/)) {
+          const parts = v.split("/")
+
+          const pattern = parts
+            .slice(0, -1)
+            .join("/")
+            .replace(/^\//, "")
+            .replace(/\/$/, "")
+
+          const flags = parts.at(-1)
+          exclude[i] = new RegExp(pattern, flags)
+        }
+      }
     }
 
     if (paths.length === 0) {
@@ -64,6 +79,7 @@ program
 
           const builder = new GTBuilder({
             distDir,
+            exclude,
             srcDir,
           })
 
