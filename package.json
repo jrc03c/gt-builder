@@ -1,6 +1,6 @@
 {
   "bin": {
-    "gt-build": "src/bin.js"
+    "gt-builder": "src/bin.js"
   },
   "dependencies": {
     "@jrc03c/data-class": "^0.0.3",
