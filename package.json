@@ -25,6 +25,8 @@
     "globals": "^15.11.0",
     "prettier": "^3.7.1"
   },
+  "main": "src/index.mjs",
+  "module": "src/index.mjs",
   "name": "@jrc03c/gt-builder",
   "scripts": {
     "build-demo": "node src/bin.js -d demo/dist demo/src",
