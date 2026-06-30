@@ -25,7 +25,6 @@ class GTBuilder {
 
   build() {
     const { distDir, srcDir } = this
-    const lq = new Liquid({ strictVariables: true })
     const outfiles = []
 
     fs.rmSync(distDir, { force: true, recursive: true })
@@ -56,51 +55,13 @@ class GTBuilder {
         continue
       }
 
-      const data = ProgramData.fromFile(file)
-      const docs = data.generateDocs()
-
       const template = fs.readFileSync(
         file.replace(/data\.ya?ml/, "template.gt"),
         "utf8",
       )
 
-      let out = lq.parseAndRenderSync(template, {
-        ...data.toObject(),
-        cleanup: "{{ cleanup }}",
-        docs,
-      })
-
-      const cleanup = data.generateCleanup(out)
-      out = lq.parseAndRenderSync(out, { cleanup })
-
-      out = out
-        .split("\n")
-        .map(v => (v.trim().length === 0 ? "" : v))
-        .join("\n")
-
-      if (data.gtlintDirectivesToRemoveOnBuild) {
-        const patterns = data.gtlintDirectivesToRemoveOnBuild.map(
-          v => new RegExp(`-- @${v}`),
-        )
-
-        out = out
-          .split("\n")
-          .filter(v => !patterns.some(p => v.match(p)))
-          .map(v => (v.trim().length === 0 ? "" : v))
-          .join("\n")
-      }
-
-      while (out.includes("\n\n\n")) {
-        out = out.replaceAll("\n\n\n", "\n\n")
-      }
-
-      if (out.match(/^ /gms)) {
-        throw new Error(
-          `The file "${file}" includes lines that use spaces rather than tabs for indentation!`,
-        )
-      }
-
-      out = out.trim()
+      const data = ProgramData.fromFile(file)
+      const out = this.render(template, data)
 
       const outfile = path.resolve(
         path.join(
@@ -114,6 +75,62 @@ class GTBuilder {
     }
 
     return outfiles
+  }
+
+  render(template, data) {
+    if (typeof template !== "string") {
+      throw new Error(
+        "The first argument passed into the `render` method must be a string representing a GuidedTrack program template!",
+      )
+    }
+
+    if (!(data instanceof ProgramData)) {
+      data = ProgramData(data)
+    }
+
+    const lq = new Liquid({ strictVariables: true })
+    const docs = data.generateDocs()
+
+    let out = lq.parseAndRenderSync(template, {
+      ...data.toObject(),
+      cleanup: "{{ cleanup }}",
+      docs,
+    })
+
+    const cleanup = data.generateCleanup(out)
+    out = lq.parseAndRenderSync(out, { cleanup })
+
+    out = out
+      .split("\n")
+      .map(v => (v.trim().length === 0 ? "" : v))
+      .join("\n")
+
+    if (data.gtlintDirectivesToRemoveOnBuild) {
+      const patterns = data.gtlintDirectivesToRemoveOnBuild.map(
+        v => new RegExp(`-- @${v}`),
+      )
+
+      out = out
+        .split("\n")
+        .filter(v => !patterns.some(p => v.match(p)))
+        .map(v => (v.trim().length === 0 ? "" : v))
+        .join("\n")
+    }
+
+    while (out.includes("\n\n\n")) {
+      out = out.replaceAll("\n\n\n", "\n\n")
+    }
+
+    const indentation = out.match(/^\s*/gms)[0]
+
+    if (indentation.includes(" ")) {
+      throw new Error(
+        `The source code includes lines that use spaces rather than tabs for indentation!`,
+      )
+    }
+
+    out = out.trim()
+    return out
   }
 }
 

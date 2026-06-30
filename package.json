@@ -29,7 +29,7 @@
   "module": "./src/index.mjs",
   "name": "@jrc03c/gt-builder",
   "scripts": {
-    "build-demo": "node src/bin.js -d demo/dist demo/src",
+    "build-demo": "node src/bin.js build -d demo/dist demo/src",
     "pub": "npm version patch --force && npm publish --access=public"
   },
   "type": "module",
