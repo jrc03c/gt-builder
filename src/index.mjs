@@ -85,7 +85,7 @@ class GTBuilder {
     }
 
     if (!(data instanceof ProgramData)) {
-      data = ProgramData(data)
+      data = new ProgramData(data)
     }
 
     const lq = new Liquid({ strictVariables: true })

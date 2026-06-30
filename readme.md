@@ -55,6 +55,12 @@ const builder = new GTBuilder({
 
 const files = builder.build()
 console.log(files)
+
+// or manually render arbitrary source code with arbitrary data:
+const template = `Hello, {{ name }}!`
+const data = { name: "Alice" }
+console.log(builder.render(template, data))
+// "Hello, Alice!"
 ```
 
 # how it works

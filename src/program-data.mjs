@@ -54,6 +54,13 @@ class ProgramData extends YamlData {
     return out
   }
 
+  inputVariables = []
+  notes = ""
+  otherVariablesNotToCleanUp = []
+  otherVariablesToCleanUp = []
+  outputVariables = []
+  services = []
+
   generateCleanup(raw) {
     const otherVariablesNotToCleanUp = this.otherVariablesNotToCleanUp || []
 
