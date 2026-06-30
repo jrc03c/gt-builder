@@ -54,27 +54,25 @@ class ProgramData extends YamlData {
     return out
   }
 
-  inputVariables = []
-  notes = ""
-  otherVariablesNotToCleanUp = []
-  otherVariablesToCleanUp = []
-  outputVariables = []
-  services = []
+  constructor(data) {
+    data = data ?? {}
+    super(data)
+  }
 
   generateCleanup(raw) {
-    const otherVariablesNotToCleanUp = this.otherVariablesNotToCleanUp || []
+    const otherVariablesNotToCleanUp = this.otherVariablesNotToCleanUp ?? []
 
     return Array.from(
       new Set(
-        getVariableNamesInGTProgram(raw || "")
-          .concat(this.inputVariables.map(v => v.name))
-          .concat(this.otherVariablesToCleanUp || [])
-          .filter(v => !this.outputVariables.find(w => w.name === v))
+        getVariableNamesInGTProgram(raw ?? "")
+          .concat((this.inputVariables ?? []).map(v => v.name))
+          .concat(this.otherVariablesToCleanUp ?? [])
+          .filter(v => !(this.outputVariables ?? []).find(w => w.name === v))
           .filter(v => !otherVariablesNotToCleanUp.includes(v)),
       ),
     )
       .filter(v => {
-        for (const w of this.inputVariables) {
+        for (const w of this.inputVariables ?? []) {
           if (!w.shouldCleanUp && w.name === v) {
             return false
           }
@@ -93,17 +91,17 @@ class ProgramData extends YamlData {
     const prefix = "--"
     const labelWidth = 11
 
-    const sortedInputVariables = this.inputVariables
+    const sortedInputVariables = (this.inputVariables ?? [])
       .toSorted((a, b) => (a.name < b.name ? -1 : 1))
       .filter(v => !!v.shouldShowInTable)
 
-    const sortedOutputVariables = this.outputVariables
+    const sortedOutputVariables = (this.outputVariables ?? [])
       .toSorted((a, b) => (a.name < b.name ? -1 : 1))
       .filter(v => !!v.shouldShowInTable)
 
     const out = []
 
-    if (this.services) {
+    if (this.services && this.services.length > 0) {
       const df = new DataFrame({
         NAME: this.services.map(v => v.name),
         URL: this.services.map(v => v.url),
