@@ -5,43 +5,11 @@ import { getVariableNamesInGTProgram } from "./utils/get-variable-names-in-gt-pr
 import { InputVariable, OutputVariable } from "./variable.mjs"
 import { wrap } from "@jrc03c/js-text-tools"
 import { YamlData } from "@jrc03c/data-file-helpers"
-import fs from "node:fs"
 
 class ProgramData extends YamlData {
   static fromFile(file) {
-    let out = YamlData.fromFile(file)
-
-    if (out.url) {
-      const raw = fs.readFileSync(file, "utf8")
-      const lines = raw.split("\n")
-
-      // correct incorrectly-parsed description values
-      !(() => {
-        const descLines = lines.filter(line => line.match(/^\s*description:/))
-
-        for (const line of descLines) {
-          const desc = line.replace(/^\s*description:/, "").trim()
-          out.description = desc
-        }
-      })()
-
-      // correct incorrectly-parsed url values
-      !(() => {
-        const line = lines.find(v => v.match(/^url:/))
-
-        if (line) {
-          const url = line.replace(/^url:/, "").trim()
-          out.url = url
-
-          try {
-            out.url = JSON.parse(out.url)
-          } catch (e) {}
-        }
-      })()
-    }
-
     const shouldIncludeAllProperties = true
-    out = new ProgramData(out)
+    const out = new ProgramData(YamlData.fromFile(file))
 
     out.inputVariables = (out.inputVariables || []).map(v =>
       InputVariable.new(v, shouldIncludeAllProperties),
@@ -100,6 +68,30 @@ class ProgramData extends YamlData {
       .filter(v => !!v.shouldShowInTable)
 
     const out = []
+
+    if (this.author || this.description || this.title || this.url) {
+      const temp = {}
+
+      if (this.title) {
+        temp.TITLE = [this.title]
+      }
+
+      if (this.description) {
+        temp.DESCRIPTION = [this.description]
+      }
+
+      if (this.url) {
+        temp.URL = [this.url]
+      }
+
+      if (this.author) {
+        temp.AUTHOR = [this.author]
+      }
+
+      const df = new DataFrame(temp)
+      const aboutTable = generateTableString(df, labelWidth)
+      out.push(hr, `${prefix} ℹ️ ABOUT:`, hr, aboutTable)
+    }
 
     if (this.services && this.services.length > 0) {
       const df = new DataFrame({

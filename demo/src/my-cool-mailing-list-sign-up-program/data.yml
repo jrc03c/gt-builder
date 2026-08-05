@@ -1,5 +1,7 @@
 author: Alice Jones <alice.jones@example.com>
 
+description: This program adds a user's email address as a new subscriber to our mailing list service.
+
 gtlint-directives-to-remove-on-build:
   - gtlint.*
   - gtformat.*
