@@ -69,23 +69,15 @@ class ProgramData extends YamlData {
 
     const out = []
 
-    if (this.author || this.description || this.title || this.url) {
+    if (this.author || this.description) {
       const temp = {}
 
-      if (this.title) {
-        temp.TITLE = [this.title]
+      if (this.author) {
+        temp.AUTHOR = [this.author]
       }
 
       if (this.description) {
         temp.DESCRIPTION = [this.description]
-      }
-
-      if (this.url) {
-        temp.URL = [this.url]
-      }
-
-      if (this.author) {
-        temp.AUTHOR = [this.author]
       }
 
       const df = new DataFrame(temp)
