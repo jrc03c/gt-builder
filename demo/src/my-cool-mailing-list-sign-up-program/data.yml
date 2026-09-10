@@ -4,10 +4,6 @@ description: This program adds a user's email address as a new subscriber to our
 
 edit-url: https://www.guidedtrack.com/programs/00000/edit
 
-gtlint-directives-to-remove-on-build:
-  - gtlint.*
-  - gtformat.*
-
 input-variables:
   - name: email_address
     default-value:
@@ -25,7 +21,7 @@ input-variables:
     should-show-in-table: true
     type: binary (0 or 1)
 
-notes: >-
+notes: |-
   Here are some notes!
 
 # other-variables-to-clean-up:
@@ -47,6 +43,10 @@ output-variables:
     description: whether or not the user was successfully added to the mailing list
     should-show-in-table: true
     type: binary (0 or 1)
+
+replacement-patterns:
+  - replace: ^\s*--\s*@gt.*?disable.*
+    with:
 
 services:
   - name: Mailing List Service

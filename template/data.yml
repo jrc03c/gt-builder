@@ -1,42 +1,47 @@
 author: Alice Jones <alice.jones@example.com>
 
-gtlint-directives-to-remove-on-build:
-  - gtlint.*
-  - gtformat.*
+description: Put your program's description here.
 
-input-variables:
-  - name:
-    default-value:
-    description:
-    is-required: false
-    should-clean-up: true
-    should-show-in-table: true
-    type:
+edit-url: https://www.guidedtrack.com/programs/00000/edit
 
-notes: >-
-  Here are some notes!
+# input-variables:
+#   - name: variable_name
+#     default-value: 234
+#     description: put your variable's description here
+#     is-required: true
+#     should-clean-up: true
+#     should-show-in-table: true
+#     type: number
 
-other-variables-to-clean-up:
-  - foo
-  - bar
-  - baz
+# notes: |-
+#   Here are some notes!
 
-other-variables-not-to-clean-up:
-  - hello
-  - world
+# other-variables-to-clean-up:
+#   - foo
+#   - bar
+#   - baz
 
-output-variables:
-  - name:
-    description:
-    should-show-in-table: true
-    type:
+# other-variables-not-to-clean-up:
+#   - hello
+#   - world
 
-services:
-  - name:
-    url:
-    headers:
-      - key:
-        value:
+# output-variables:
+#   - name: some_other_variable
+#     description: put your variable's description here
+#     should-show-in-table: true
+#     type: some_type
+
+# replacement-patterns:
+#   - replace: ^\s*--\s*@gt.*?disable.*
+#     with:
+
+# services:
+#   - name: Service Name
+#     url: https://example.com/api/v0
+#     username: "[empty string]"
+#     password: "[MAILING_LIST_SERVICE_API_KEY]"
+#     headers:
+#       - key: "some-key"
+#         value: "<some-value>"
 
 title: My Cool Program
-url: https://www.guidedtrack.com/programs/00000/edit

@@ -105,14 +105,23 @@ class GTBuilder {
       .map(v => (v.trim().length === 0 ? "" : v))
       .join("\n")
 
-    if (data.gtlintDirectivesToRemoveOnBuild) {
-      const patterns = data.gtlintDirectivesToRemoveOnBuild.map(
-        v => new RegExp(`-- @${v}`),
-      )
+    if (data.replacementPatterns) {
+      const patterns = data.replacementPatterns.map(v => {
+        return {
+          replace: new RegExp(v.replace),
+          with: v.with ?? "",
+        }
+      })
 
       out = out
         .split("\n")
-        .filter(v => !patterns.some(p => v.match(p)))
+        .map(v => {
+          for (const p of patterns) {
+            v = v.replace(p.replace, p.with)
+          }
+
+          return v
+        })
         .map(v => (v.trim().length === 0 ? "" : v))
         .join("\n")
     }
