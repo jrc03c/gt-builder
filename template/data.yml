@@ -32,7 +32,8 @@ edit-url: https://www.guidedtrack.com/programs/00000/edit
 #     type: some_type
 
 # replacement-patterns:
-#   - replace: ^\s*--\s*@gt.*?disable.*
+#   - replace: ^--\s*@gt.*?disable.*?$
+#     flags: gms
 #     with:
 
 # services:
