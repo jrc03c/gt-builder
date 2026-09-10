@@ -106,24 +106,16 @@ class GTBuilder {
       .join("\n")
 
     if (data.replacementPatterns) {
-      const patterns = data.replacementPatterns.map(v => {
-        return {
-          replace: new RegExp(v.replace),
-          with: v.with ?? "",
+      for (const pattern of data.replacementPatterns) {
+        const p = {}
+        p.flags = pattern.flags ?? "gms"
+        p.replace = new RegExp(pattern.replace, p.flags)
+        p.with = pattern.with ?? ""
+
+        while (out.match(p.replace)) {
+          out = out.replaceAll(p.replace, p.with)
         }
-      })
-
-      out = out
-        .split("\n")
-        .map(v => {
-          for (const p of patterns) {
-            v = v.replace(p.replace, p.with)
-          }
-
-          return v
-        })
-        .map(v => (v.trim().length === 0 ? "" : v))
-        .join("\n")
+      }
     }
 
     while (out.includes("\n\n\n")) {

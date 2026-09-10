@@ -45,7 +45,8 @@ output-variables:
     type: binary (0 or 1)
 
 replacement-patterns:
-  - replace: ^\s*--\s*@gt.*?disable.*
+  - replace: ^--\s*@gt.*?disable.*?$
+    flags: gms
     with:
 
 services:
