@@ -8,13 +8,17 @@ import process from "node:process"
 class GTBuilder {
   distDir = path.join(process.cwd(), "dist")
   exclude = [".git", "node_modules"]
+  liquid = new Liquid({ strictVariables: true })
   srcDir = path.join(process.cwd(), "src")
+  transforms = []
 
   constructor(data) {
     data = data ?? {}
     this.distDir = data.distDir ?? this.distDir
     this.exclude = data.exclude ?? this.exclude
+    this.liquid = data.liquid ?? this.liquid
     this.srcDir = data.srcDir ?? this.srcDir
+    this.transforms = data.transforms ?? this.transforms
 
     if (this.distDir === this.srcDir) {
       throw new Error(
@@ -61,7 +65,7 @@ class GTBuilder {
       )
 
       const data = ProgramData.fromFile(file)
-      const out = this.render(template, data)
+      let out = this.render(template, data)
 
       const outfile = path.resolve(
         path.join(
@@ -88,17 +92,16 @@ class GTBuilder {
       data = new ProgramData(data)
     }
 
-    const lq = new Liquid({ strictVariables: true })
     const docs = data.generateDocs()
 
-    let out = lq.parseAndRenderSync(template, {
+    let out = this.liquid.parseAndRenderSync(template, {
       ...data.toObject(),
       cleanup: "{{ cleanup }}",
       docs,
     })
 
     const cleanup = data.generateCleanup(out)
-    out = lq.parseAndRenderSync(out, { cleanup })
+    out = this.liquid.parseAndRenderSync(out, { cleanup })
 
     out = out
       .split("\n")
@@ -131,6 +134,16 @@ class GTBuilder {
     }
 
     out = out.trim()
+
+    for (const t of this.transforms) {
+      // note: assumes that transforms are synchronous!
+      out = t(out, data)
+
+      if (out instanceof Promise) {
+        throw new Error("Transforms must be synchronous!")
+      }
+    }
+
     return out
   }
 }

@@ -65,3 +65,5 @@
 
 -- @gtlint-disable-next-line
 {{cleanup}}
+
+-- NOTE: This line will be deleted by a "transform" in the build script!
