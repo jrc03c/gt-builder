@@ -7,7 +7,7 @@
     "@jrc03c/data-file-helpers": "^0.0.3",
     "@jrc03c/fs-extras": "^0.0.30",
     "@jrc03c/gtlint": "^0.13.3",
-    "@jrc03c/js-math-tools": "^0.0.104",
+    "@jrc03c/js-math-tools": "^0.0.109",
     "@jrc03c/js-text-tools": "^0.0.106",
     "@jrc03c/make-key": "^0.0.41",
     "@jrc03c/misc-sdks": "^0.0.25",
